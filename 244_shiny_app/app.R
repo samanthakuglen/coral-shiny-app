@@ -34,8 +34,7 @@ ui <- fluidPage(
                  sidebarPanel("WIDGETS"),
                  mainPanel("OUTPUT!")
              ) # end sidebarLayout
-    ) #end tabPanel Site Data Summaries)
-) # end ui
+    ), #end tabPanel Site Data Summaries)
 
 # Define server 
     # Application title
