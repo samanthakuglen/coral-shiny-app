@@ -16,7 +16,7 @@ ui <- fluidPage(
   theme = bs_theme(version = 4,
                    bootswatch = "sandstone"),
 
-    navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel"),
+    navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
                  sidebarPanel("WIDGETS"),
@@ -34,8 +34,8 @@ ui <- fluidPage(
                  sidebarPanel("WIDGETS"),
                  mainPanel("OUTPUT!")
              ) # end sidebarLayout
-    ), #end tabPanel Site Data Summaries)
-
+    ) #end tabPanel Site Data Summaries)
+),
 # Define server 
     # Application title
     titlePanel("Old Faithful Geyser Data")
