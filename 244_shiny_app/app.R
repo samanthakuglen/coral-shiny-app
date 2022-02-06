@@ -34,7 +34,9 @@ ui <- fluidPage(
                                                fluidRow(column(4, verbatimTextOutput("value"))),
                             checkboxGroupInput(inputId = "site_name",
                                                 label = "Choose a site:",
-                                                choices = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW")),
+                                               choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                            )
                             fluidRow(column(3, verbatimTextOutput("value")))
                  ),
                  mainPanel("OUTPUT!")
