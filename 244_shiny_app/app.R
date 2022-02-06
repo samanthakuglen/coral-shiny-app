@@ -16,7 +16,8 @@ ui <- fluidPage(
                                            choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
                               ),
-                 mainPanel(plotOutput(outputId = "site_map"))
+                 mainPanel("Site Location",
+                           plotOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
     tabPanel("Site Data Summaries",
