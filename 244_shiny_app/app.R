@@ -10,7 +10,9 @@ ui <- fluidPage(
     navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
-                 sidebarPanel("WIDGETS"),
+                 sidebarPanel(radioButtons(inputId = "site_name",
+                                           label = "Choose a site:",
+                                           choices = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"))),
                  mainPanel("OUTPUT!")
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
