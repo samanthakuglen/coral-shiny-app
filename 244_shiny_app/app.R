@@ -27,9 +27,6 @@ ui <- fluidPage(
              ) # end sidebarLayout
     ) #end tabPanel Site Data Summaries)
 ),
-# Define server 
-    # Application title
-    titlePanel("Old Faithful Geyser Data")
 )
 
 # Define server logic required to draw a histogram
