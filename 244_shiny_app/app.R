@@ -32,7 +32,7 @@ ui <- fluidPage(
                  sidebarPanel(radioButtons(inputId = "site_name",
                                            label = "Choose a site:",
                                            choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
-                                           choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                           choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
                               ),
                  mainPanel("Site Location Maps! Incoming...",
@@ -46,7 +46,7 @@ ui <- fluidPage(
                             checkboxGroupInput(inputId = "site_name",
                                                 label = "Choose a site:",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
-                                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                             ),
                             fluidRow(column(3, verbatimTextOutput("value")))
                  ),
