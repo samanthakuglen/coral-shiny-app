@@ -8,26 +8,13 @@ ui <- fluidPage(
                    bootswatch = "sandstone"),
 
     navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
-    tabPanel("Map of Fishery Relevant Sites",
-             sidebarLayout(
-                 sidebarPanel(radioButtons(inputId = "site_name",
-                                           label = "Choose a site:",
-                                           choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
-                                           choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
-                                           )
-                              ),
-                 mainPanel("Site Location",
-                           plotOutput(outputId = "site_map"))
-             ) # end sidebarLayout
-    ), #end tabPanel historical heatwave
-    tabPanel("Site Data Summaries",
-             sidebarLayout(
-                 sidebarPanel(actionButton("action", label = "Explore Data"),
-                              hr(),
-                              fluidRow(column(2, verbatimTextOutput("value")))
-                              ),
-                 mainPanel(
-                 "Data summary: \nIn order to examine temporal and spatial patterns of temperature in giant kelp forests, Santa Barbara Long Term Ecological Research (SBC-LTER) has continuously measured ambient sea water temperature at nine reef sites located along the mainland coast of the Santa Barbara Channel and two sites on the North side of Santa Cruz Island since 2000. \n
+    tabPanel("Site Data Summary",
+            sidebarLayout(
+                sidebarPanel(actionButton("action", label = "Explore Data"),
+                            hr(),
+                            fluidRow(column(2, verbatimTextOutput("value")))
+                            ),
+                mainPanel("Data summary: \nIn order to examine temporal and spatial patterns of temperature in giant kelp forests, Santa Barbara Long Term Ecological Research (SBC-LTER) has continuously measured ambient sea water temperature at nine reef sites located along the mainland coast of the Santa Barbara Channel and two sites on the North side of Santa Cruz Island since 2000. \n
                  
                  Methods for data collection: Submersible temperature loggers (Tidbit, Onset Computer Corporation, Bourne MA) were used to measure benthic temperature at nine coastal reef and two island sites in the Santa Barbara Channel, CA. 
                  At each site, two temperature loggers were secured to the seafloor at a depth of 7 m (MLLW). Each logger was programmed to record ambient temperature at an interval of 30 minutes. Note that the two loggers were staggered by 15 minutes so the final records reflect a temperature measurement every 15 minutes. The loggers were retrieved and replaced bi-annually, in the early summer and early winter. 
@@ -37,9 +24,21 @@ ui <- fluidPage(
                  
                  Data source: 
                  Reed, D., Miller, R. SBC LTER: Reef: Bottom Temperature: Continuous water temperature, ongoing since 2000 ver 26. Environmental Data Initiative. https://doi.org/10.6073/pasta/22ed009da1cf41cbf76490ab2c0c5949. Accessed 2022-02-06."
-                 )
-             ) # end sidebarLayout
+                )
+                ) # end sidebarLayout
     ), #end tabPanel Site Data Summaries
+    tabPanel("Map of Fishery Relevant Sites",
+             sidebarLayout(
+                 sidebarPanel(radioButtons(inputId = "site_name",
+                                           label = "Choose a site:",
+                                           choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                                           choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                           )
+                              ),
+                 mainPanel("Site Location Maps! Incoming...",
+                           plotOutput(outputId = "site_map"))
+             ) # end sidebarLayout
+    ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
                  sidebarPanel(dateRangeInput("dates", label = h3("Date range")),
@@ -51,9 +50,9 @@ ui <- fluidPage(
                             ),
                             fluidRow(column(3, verbatimTextOutput("value")))
                  ),
-                 mainPanel("OUTPUT!")
-             ) # end sidebarLayout
-    ) #end tabPanel Site Data Summaries)
+                 mainPanel("Output Plot! Incoming...")
+             ) # end sidebarLayout Map Fish Sites
+    ) #end tabPanel Site Temp Profiles
 )
 )
 
