@@ -26,7 +26,7 @@ ui <- fluidPage(
                  mainPanel("OUTPUT!")
              ) # end sidebarLayout
     ) #end tabPanel Site Data Summaries)
-),
+)
 )
 
 # Define server logic required to draw a histogram
