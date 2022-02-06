@@ -12,8 +12,11 @@ ui <- fluidPage(
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
                                            label = "Choose a site:",
-                                           choices = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"))),
-                 mainPanel("OUTPUT!")
+                                           choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                                           choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyp Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                           )
+                              ),
+                 mainPanel(plotOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
     tabPanel("Site Data Summaries",
