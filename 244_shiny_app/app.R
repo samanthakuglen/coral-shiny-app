@@ -18,8 +18,11 @@ ui <- fluidPage(
     ), #end tabPanel historical heatwave
     tabPanel("Site Data Summaries",
              sidebarLayout(
-                 sidebarPanel("WIDGETS"),
-                 mainPanel("OUTPUT!")
+                 sidebarPanel(actionButton("action", label = "Explore Data"),
+                              hr(),
+                              fluidRow(column(2, verbatimTextOutput("value")))
+                              ),
+                 mainPanel("Data")
              ) # end sidebarLayout
     ), #end tabPanel Site Data Summaries
     tabPanel("Comparison of Site Temperature Profiles",
@@ -31,12 +34,9 @@ ui <- fluidPage(
 )
 )
 
-# Define server logic required to draw a histogram
+# Define server logic 
 server <- function(input, output) {
 
-    output$distPlot <- renderPlot({
-       
-    })
 }
 
 # Run the application 
