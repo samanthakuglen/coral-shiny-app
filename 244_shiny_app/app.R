@@ -9,9 +9,12 @@
 
 library(shiny)
 library(tidyverse)
+library(bslib)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  theme = bs_theme(version = 4,
+                   bootswatch = "sandstone"),
 
     navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel"),
     tabPanel("Map of Fishery Relevant Sites",
@@ -35,6 +38,11 @@ ui <- fluidPage(
 ) # end ui
 
 # Define server 
+    # Application title
+    titlePanel("Old Faithful Geyser Data")
+)
+
+# Define server logic required to draw a histogram
 server <- function(input, output) {
 
     output$distPlot <- renderPlot({
