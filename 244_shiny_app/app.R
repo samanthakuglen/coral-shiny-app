@@ -27,7 +27,13 @@ ui <- fluidPage(
     ), #end tabPanel Site Data Summaries
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
-                 sidebarPanel("WIDGETS"),
+                 sidebarPanel(dateRangeInput("dates", label = h3("Date range")),
+                                               fluidRow(column(4, verbatimTextOutput("value"))),
+                            checkboxGroupInput(inputId = "site_name",
+                                                label = "Choose a site:",
+                                                choices = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW")),
+                            fluidRow(column(3, verbatimTextOutput("value")))
+                 ),
                  mainPanel("OUTPUT!")
              ) # end sidebarLayout
     ) #end tabPanel Site Data Summaries)
