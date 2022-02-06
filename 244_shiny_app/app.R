@@ -8,28 +8,16 @@
 #
 
 library(shiny)
+library(tidyverse)
+library(bslib)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
+  theme = bs_theme(version = 4,
+                   bootswatch = "sandstone"),
 
     # Application title
-    titlePanel("Old Faithful Geyser Data"),
-
-    # Sidebar with a slider input for number of bins 
-    sidebarLayout(
-        sidebarPanel(
-            sliderInput("bins",
-                        "Number of bins:",
-                        min = 1,
-                        max = 50,
-                        value = 30)
-        ),
-
-        # Show a plot of the generated distribution
-        mainPanel(
-           plotOutput("distPlot")
-        )
-    )
+    titlePanel("Old Faithful Geyser Data")
 )
 
 # Define server logic required to draw a histogram
