@@ -4,7 +4,7 @@ author: "German Silva"
 date: "2/17/2022"
 output: html_document
 ---
-
+set up
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
@@ -12,6 +12,7 @@ library(tidyverse)
 library(here)
 ```
 
+Creating subset csv
 ```{r}
 all_temp <- read_csv(here("Bottom_temp_all_years_20210804.csv"))
 
@@ -20,5 +21,41 @@ temp_subset <- all_temp %>%
   summarize(avg_temp = mean(TEMP_C))
 
 write_csv(temp_subset, file = "sbc_lter_temp_subset.csv")
+
+site_subset <- temp_subset %>% 
+  janitor::clean_names() %>% 
+  mutate(lat = case_when(
+    site == "ABUR" ~ 34.400275,
+    site == "AHND" ~ 34.471817,
+    site == "AQUE" ~ 34.46774988, 
+    site == "BULL" ~ 34.45850533,
+    site == "CARP" ~ 34.3916319, 
+    site == "GOLB" ~ 34.4137165,
+    site == "IVEE" ~ 34.402783,
+    site == "MOHK" ~ 34.3940708,
+    site == "NAPL" ~ 34.4221216,
+    site == "SCDI" ~ 34.05865,
+    site == "SCTW" ~ 34.0444335
+  ),
+  long = case_when(
+    site == "ABUR" ~ -119.7445915,
+    site == "AHND" ~ -120.1426165,
+    site == "AQUE" ~ -120.11905, 
+    site == "BULL" ~ -120.33349,
+    site == "CARP" ~ -119.5416933, 
+    site == "GOLB" ~ -119.8221,
+    site == "IVEE" ~ -119.85755,
+    site == "MOHK" ~ -119.72957,
+    site == "NAPL" ~ -119.95154,
+    site == "SCDI" ~ -119.75763,
+    site == "SCTW" ~ -119.71513
+  )) %>% 
+  select(site, lat, long) %>% 
+  group_by(site) %>% 
+  summarize(lat = mean(lat),
+            long = mean(long))
+
+write_csv(x = site_subset,file = "site_locations.csv")
+  
 ```
 
