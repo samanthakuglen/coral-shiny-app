@@ -1,0 +1,24 @@
+---
+title: "Subsetting of original data"
+author: "German Silva"
+date: "2/17/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(here)
+```
+
+```{r}
+all_temp <- read_csv(here("Bottom_temp_all_years_20210804.csv"))
+
+temp_subset <- all_temp %>% 
+  group_by(SITE, DATE_LOCAL) %>% 
+  summarize(avg_temp = mean(TEMP_C))
+
+write_csv(temp_subset, file = "sbc_lter_temp_subset.csv")
+```
+
