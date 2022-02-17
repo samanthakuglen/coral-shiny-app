@@ -1,6 +1,7 @@
 library(shiny)
 library(tidyverse)
 library(bslib)
+library(here)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -41,16 +42,16 @@ ui <- fluidPage(
     ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
-                 sidebarPanel(dateRangeInput("dates", label = h3("Date range")),
+                 sidebarPanel(dateRangeInput(inputId = "dates", label = h3("Date range")),
                                                fluidRow(column(4, verbatimTextOutput("value"))),
-                            checkboxGroupInput(inputId = "site_name",
+                            checkboxGroupInput(inputId = "site_code",
                                                 label = "Choose a site:",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                                choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                             ),
                             fluidRow(column(3, verbatimTextOutput("value")))
                  ),
-                 mainPanel("Output Plot! Incoming...")
+                 mainPanel(plotOutput(outputId = "temp_plot"))
              ) # end sidebarLayout Map Fish Sites
     ) #end tabPanel Site Temp Profiles
 )
@@ -58,6 +59,15 @@ ui <- fluidPage(
 
 # Define server logic 
 server <- function(input, output) {
+  site_select <- reactive({
+    read_csv("sbc_lter_temp_subset.csv") %>% 
+      filter(SITE == input$site_code)
+  })# end penguin_select reactive
+  output$temp_plot <- renderPlot({
+    ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
+      geom_line(aes(color = SITE))+
+      scale_x_date(limits = c(input$dates))
+  })
 
 }
 
