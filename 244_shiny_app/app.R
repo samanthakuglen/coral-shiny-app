@@ -44,7 +44,7 @@ ui <- fluidPage(
              sidebarLayout(
                  sidebarPanel(dateRangeInput(inputId = "date_select", label = h3("Date range")),
                             checkboxGroupInput(inputId = "site_code",
-                                                label = "Choose a site:",
+                                                label = "Choose site(s):",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                                choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                             ),
