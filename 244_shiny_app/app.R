@@ -44,7 +44,7 @@ ui <- fluidPage(
              sidebarLayout(
                  sidebarPanel(dateRangeInput(inputId = "date_select", label = h3("Date range")),
                             checkboxGroupInput(inputId = "site_code",
-                                                label = "Choose a site:",
+                                                label = "Choose a site (max 3 for best visibility):",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                                choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                             ),
@@ -62,9 +62,18 @@ server <- function(input, output) {
       filter(SITE %in% input$site_code)
   })# end penguin_select reactive
   output$temp_plot <- renderPlot({
+    ggthemr::ggthemr('dust')
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
-      scale_x_date(limits = c(input$date_select))
+      gghighlight(unhighlighted_params = list(alpha = 0.5),
+                  use_direct_label = FALSE)+
+      facet_wrap(~SITE)+
+      scale_x_date(limits = c(input$date_select))+
+      labs(x = "Date",
+           y = "Average Daily Temperature (°C)",
+           color = "Site",
+           linetype = "Site")+
+      ggtitle("Average Daily Temperature for Selected Site(s) and Dates")
   })
 
 }
