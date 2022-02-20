@@ -2,7 +2,19 @@ library(shiny)
 library(tidyverse)
 library(bslib)
 library(here)
+
+library(sf)
+library(tmap)
+library(tmaptools)
+library(leaflet)
+
 library(gghighlight)
+
+# set coordinates for Map (i.e. bounding box)
+sbLat <- 34.400275
+sbLong <- -119.7445915
+sbZoom <- 9
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -38,7 +50,7 @@ ui <- fluidPage(
                                            )
                               ),
                  mainPanel("Site Location Maps! Incoming...",
-                           plotOutput(outputId = "site_map"))
+                           leafletOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
@@ -87,8 +99,21 @@ server <- function(input, output) {
             strip.background = element_rect("white"),
             axis.line = element_line(color = "#5b4f41"))
   })
-
-}
+  
+  site_choose <- reactive({
+    read_csv("site_locations.csv") %>%
+      filter(site %in% input$site_name)
+  })
+  
+  output$site_map <-renderLeaflet({
+    leaflet(data = site_choose()) %>%
+      setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
+      addTiles() %>% 
+      addMarkers(~long, ~lat, popup = ~site, label = ~site) %>%
+      addProviderTiles(providers$Esri.WorldStreetMap)
+  })
+  
+} #end server
 
 # Run the application 
 shinyApp(ui = ui, server = server)
