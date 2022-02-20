@@ -41,8 +41,7 @@ ui <- fluidPage(
                                            choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
                               ),
-                 mainPanel("Site Location Maps! Incoming...",
-                           plotOutput(outputId = "site_map"))
+                 mainPanel(plotOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
@@ -76,7 +75,7 @@ server <- function(input, output) {
   api_key <- "AIzaSyD16sobKysfo5ZAW6Vxe2xTI5i4Zauo03k"
   sites <- reactive({
     read_csv(here("site_locations.csv")) %>% 
-      filter(SITE %in% input$site_code)
+      filter(site %in% input$site_code)
 
   }) # end site map set up 
   
