@@ -49,8 +49,7 @@ ui <- fluidPage(
                                            choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
                               ),
-                 mainPanel("Site Location Maps! Incoming...",
-                           leafletOutput(outputId = "site_map"))
+                 mainPanel(leafletOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
