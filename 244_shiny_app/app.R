@@ -2,6 +2,11 @@ library(shiny)
 library(tidyverse)
 library(bslib)
 library(here)
+library(tmap)
+library(tmaptools)
+library(sf)
+library(stars)
+library(googleway)
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -60,14 +65,28 @@ server <- function(input, output) {
   site_select <- reactive({
     read_csv("sbc_lter_temp_subset.csv") %>% 
       filter(SITE %in% input$site_code)
-  })# end penguin_select reactive
+  })# end site_select reactive
+  
   output$temp_plot <- renderPlot({
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
       scale_x_date(limits = c(input$date_select))
+  }) # end output plot of time series
+  
+  api_key <- "AIzaSyD16sobKysfo5ZAW6Vxe2xTI5i4Zauo03k"
+  sites <- reactive({
+    read_csv(here("site_locations.csv")) %>% 
+      filter(SITE %in% input$site_code)
+
+  }) # end site map set up 
+  
+  output$site_map <- renderGoogle_map({
+    google_map(data = sites(), key = api_key) %>%
+      add_markers(lat = "lat", lon = "long", mouse_over = "INFO")
+    
   })
 
-}
+} # end server 
 
 # Run the application 
 shinyApp(ui = ui, server = server)
