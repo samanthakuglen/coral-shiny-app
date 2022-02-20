@@ -42,11 +42,15 @@ ui <- fluidPage(
     ), #end tabPanel historical heatwave
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
-                 sidebarPanel(dateRangeInput(inputId = "date_select", label = h3("Date range")),
+                 sidebarPanel(dateRangeInput(inputId = "date_select", 
+                                             label = h3("Date range"),
+                                             start = "2002-08-01",
+                                             end = "2021-07-26"),
                             checkboxGroupInput(inputId = "site_code",
-                                                label = "Choose a site (max 3 for best visibility):",
+                                                label = "Choose a site:",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
-                                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor"),
+                                               selected = c("ABUR", "AHND")
                             ),
                  ),
                  mainPanel(plotOutput(outputId = "temp_plot"))
@@ -60,7 +64,7 @@ server <- function(input, output) {
   site_select <- reactive({
     read_csv("sbc_lter_temp_subset.csv") %>% 
       filter(SITE %in% input$site_code)
-  })# end penguin_select reactive
+  })# end site_select reactive
   output$temp_plot <- renderPlot({
     ggthemr::ggthemr('dust')
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
