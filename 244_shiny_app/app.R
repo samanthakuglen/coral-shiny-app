@@ -2,15 +2,19 @@ library(shiny)
 library(tidyverse)
 library(bslib)
 library(here)
+
 library(sf)
 library(tmap)
 library(tmaptools)
 library(leaflet)
 
+library(gghighlight)
+
 # set coordinates for Map (i.e. bounding box)
 sbLat <- 34.400275
 sbLong <- -119.7445915
 sbZoom <- 9
+
 
 # Define UI for application that draws a histogram
 ui <- fluidPage(
@@ -75,7 +79,6 @@ server <- function(input, output) {
       filter(SITE %in% input$site_code)
   })# end site_select reactive
   output$temp_plot <- renderPlot({
-    ggthemr::ggthemr('dust')
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
       gghighlight(unhighlighted_params = list(alpha = 0.5),
@@ -86,7 +89,15 @@ server <- function(input, output) {
            y = "Average Daily Temperature (°C)",
            color = "Site",
            linetype = "Site")+
-      ggtitle("Average Daily Temperature for Selected Site(s) and Dates")
+      ggtitle("Average Daily Temperature for Selected Site(s) and Dates")+
+      theme(plot.title = element_text(color = "#5b4f41"), 
+            plot.background = element_rect("white"), 
+            panel.background = element_rect("#faf7f2"),
+            panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
+            axis.text = element_text(color = "#5b4f41"),
+            axis.title = element_text(color = "#5b4f41"),
+            strip.background = element_rect("white"),
+            axis.line = element_line(color = "#5b4f41"))
   })
   
   site_choose <- reactive({
