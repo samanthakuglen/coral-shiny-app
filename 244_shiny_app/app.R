@@ -125,18 +125,7 @@ server <- function(input, output) {
       filter(site != input$site_name)
   })
   
-  # # user input site to appear in red
-  # output$site_map <-renderLeaflet({
-  #   
-  #   leaflet(data = site_choose()) %>% # highlight site marker from user input
-  #     setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
-  #     addTiles() %>%
-  #     addMarkers(~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
-  #     addProviderTiles(providers$Esri.WorldStreetMap)
-  # })
-  
-  
-  ##### ****** Overwrites code above? ********* all site markers to appear on map in blue
+  # all site markers to appear on map in blue, user input site to appear in red
   output$site_map <- renderLeaflet({
     leaflet() %>%
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
