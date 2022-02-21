@@ -1,22 +1,22 @@
+# Attach packages 
 library(shiny)
 library(tidyverse)
 library(bslib)
 library(here)
-
 library(sf)
 library(tmap)
 library(tmaptools)
 library(leaflet)
-
 library(gghighlight)
 
-#Read in data for site map markers (Widget 2)
+# Read in data for site map markers (Widget 2)
 site_markers <- read_csv("site_locations_all.csv")
 
-# Set coordinates for Map (i.e. bounding box in Widget 2) and add red icon
+# Set bounding box coordinates for map (in Widget 2) and add red and blue map icons
 sbLat <- 34.317664
 sbLong <- -119.757643
 sbZoom <- 9.48
+
 red_icon <- makeIcon(
   iconUrl = "https://img.icons8.com/offices/72/marker.png",
   iconWidth = 40, iconHeight = 40)
@@ -58,7 +58,7 @@ ui <- fluidPage(
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
-                                           label = "Choose a site:",
+                                           label = "Select a site to highlight:",
                                            choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                            choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
@@ -75,7 +75,7 @@ ui <- fluidPage(
                                              start = "2002-08-01",
                                              end = "2021-07-26"),
                             checkboxGroupInput(inputId = "site_code",
-                                                label = "Choose a site:",
+                                               label = "Choose site(s):",
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                                choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor"),
                                                selected = c("ABUR", "AHND")
@@ -89,10 +89,14 @@ ui <- fluidPage(
 
 # Define server logic 
 server <- function(input, output) {
+  
+  # Widget 3: Reactive Input
   site_select <- reactive({
     read_csv("sbc_lter_temp_subset.csv") %>% 
       filter(SITE %in% input$site_code)
-  })# end site_select reactive
+  }) # end site_select reactive
+  
+  # Widget 3: Output
   output$temp_plot <- renderPlot({
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
@@ -115,17 +119,14 @@ server <- function(input, output) {
             axis.line = element_line(color = "#5b4f41"))
   })
   
+  # Widget 2: Reactive Input
   site_choose <- reactive({
     read_csv("site_locations.csv") %>%
       filter(site %in% input$site_name)
   })
   
-  sites_all <- reactive({
-    read_csv("site_locations.csv") %>%
-      filter(site != input$site_name)
-  })
-  
-  # all site markers to appear on map in blue, user input site to appear in red
+  # Widget 3: Output 
+  # All site markers appear on map in blue and the user input site appears in red
   output$site_map <- renderLeaflet({
     leaflet() %>%
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
@@ -134,7 +135,6 @@ server <- function(input, output) {
       addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>% 
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
-  
   
 } #end server
 
