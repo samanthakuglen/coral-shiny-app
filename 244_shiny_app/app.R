@@ -16,9 +16,13 @@ site_markers <- read_csv("site_locations_all.csv")
 # Set coordinates for Map (i.e. bounding box in Widget 2) and add red icon
 sbLat <- 34.317664
 sbLong <- -119.757643
-sbZoom <- 9.4
+sbZoom <- 9.48
 red_icon <- makeIcon(
-  iconUrl = "https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/map-marker-icon.png",
+  iconUrl = "https://img.icons8.com/offices/72/marker.png",
+  iconWidth = 40, iconHeight = 40)
+
+blue_icon <- makeIcon(
+  iconUrl = "https://img.icons8.com/ultraviolet/344/marker.png",
   iconWidth = 40, iconHeight = 40)
 
 # Define UI for application 
@@ -121,22 +125,24 @@ server <- function(input, output) {
       filter(site != input$site_name)
   })
   
-  # user input site to appear in red
-  output$site_map <-renderLeaflet({
-    leaflet(data = site_choose()) %>% # highlight site marker from user input
-      setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
-      addTiles() %>%
-      addMarkers(~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
-      addProviderTiles(providers$Esri.WorldStreetMap)
-    
-  })
+  # # user input site to appear in red
+  # output$site_map <-renderLeaflet({
+  #   
+  #   leaflet(data = site_choose()) %>% # highlight site marker from user input
+  #     setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
+  #     addTiles() %>%
+  #     addMarkers(~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
+  #     addProviderTiles(providers$Esri.WorldStreetMap)
+  # })
+  
   
   ##### ****** Overwrites code above? ********* all site markers to appear on map in blue
   output$site_map <- renderLeaflet({
-    leaflet(data = site_markers) %>% 
+    leaflet() %>%
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
-      addTiles() %>% 
-      addMarkers(~long_all, ~lat_all, popup = ~site_all, label = ~site_all) %>%
+      addTiles() %>%
+      addMarkers(data = site_markers, ~long_all, ~lat_all, popup = ~site_all, label = ~site_all, icon = blue_icon) %>%
+      addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>% 
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
