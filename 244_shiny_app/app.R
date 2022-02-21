@@ -10,18 +10,26 @@ library(leaflet)
 
 library(gghighlight)
 
-# set coordinates for Map (i.e. bounding box)
-sbLat <- 34.400275
-sbLong <- -119.7445915
-sbZoom <- 9
+#Read in data for site map markers (Widget 2)
+site_markers <- read_csv("site_locations_all.csv")
 
+# Set coordinates for Map (i.e. bounding box in Widget 2) and add red icon
+sbLat <- 34.317664
+sbLong <- -119.757643
+sbZoom <- 9.4
+red_icon <- makeIcon(
+  iconUrl = "https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/map-marker-icon.png",
+  iconWidth = 40, iconHeight = 40)
 
-# Define UI for application that draws a histogram
+# Define UI for application 
 ui <- fluidPage(
   theme = bs_theme(version = 4,
                    bootswatch = "sandstone"),
-
+  
+    # Homepage title
     navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
+    
+    # Widget 1: Site Info
     tabPanel("Site Data Summary",
             sidebarLayout(
                 sidebarPanel(actionButton("action", label = "Explore Data"),
@@ -41,6 +49,8 @@ ui <- fluidPage(
                 )
                 ) # end sidebarLayout
     ), #end tabPanel Site Data Summaries
+    
+    # Widget 2: Map 
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
@@ -52,6 +62,8 @@ ui <- fluidPage(
                  mainPanel(leafletOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
+    
+    # Widget 3: Temperature Time Series
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
                  sidebarPanel(dateRangeInput(inputId = "date_select", 
@@ -68,8 +80,8 @@ ui <- fluidPage(
                  mainPanel(plotOutput(outputId = "temp_plot"))
              ) # end sidebarLayout Map Fish Sites
     ) #end tabPanel Site Temp Profiles
-)
-)
+) # end navbarPage
+) # end ui
 
 # Define server logic 
 server <- function(input, output) {
@@ -104,13 +116,30 @@ server <- function(input, output) {
       filter(site %in% input$site_name)
   })
   
+  sites_all <- reactive({
+    read_csv("site_locations.csv") %>%
+      filter(site != input$site_name)
+  })
+  
+  # user input site to appear in red
   output$site_map <-renderLeaflet({
-    leaflet(data = site_choose()) %>%
+    leaflet(data = site_choose()) %>% # highlight site marker from user input
+      setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
+      addTiles() %>%
+      addMarkers(~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
+      addProviderTiles(providers$Esri.WorldStreetMap)
+    
+  })
+  
+  ##### ****** Overwrites code above? ********* all site markers to appear on map in blue
+  output$site_map <- renderLeaflet({
+    leaflet(data = site_markers) %>% 
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
       addTiles() %>% 
-      addMarkers(~long, ~lat, popup = ~site, label = ~site) %>%
+      addMarkers(~long_all, ~lat_all, popup = ~site_all, label = ~site_all) %>%
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
+  
   
 } #end server
 
