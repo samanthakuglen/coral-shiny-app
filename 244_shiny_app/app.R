@@ -8,6 +8,7 @@ library(tmap)
 library(tmaptools)
 library(leaflet)
 library(gghighlight)
+library(yonder)
 
 # Read in data for site map markers (Widget 2)
 site_markers <- read_csv("site_locations_all.csv")
@@ -34,25 +35,64 @@ ui <- fluidPage(
     navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
     
     # Widget 1: Site Info
-    tabPanel("Site Data Summary",
-            sidebarLayout(
-                sidebarPanel(actionButton("action", label = "Explore Data"),
-                            hr(),
-                            fluidRow(column(2, verbatimTextOutput("value")))
-                            ),
-                mainPanel("Data summary: \nIn order to examine temporal and spatial patterns of temperature in giant kelp forests, Santa Barbara Long Term Ecological Research (SBC-LTER) has continuously measured ambient sea water temperature at nine reef sites located along the mainland coast of the Santa Barbara Channel and two sites on the North side of Santa Cruz Island since 2000. \n
-                 
-                 Methods for data collection: Submersible temperature loggers (Tidbit, Onset Computer Corporation, Bourne MA) were used to measure benthic temperature at nine coastal reef and two island sites in the Santa Barbara Channel, CA. 
-                 At each site, two temperature loggers were secured to the seafloor at a depth of 7 m (MLLW). Each logger was programmed to record ambient temperature at an interval of 30 minutes. Note that the two loggers were staggered by 15 minutes so the final records reflect a temperature measurement every 15 minutes. The loggers were retrieved and replaced bi-annually, in the early summer and early winter. 
-                 
-                 Purpose of the app:
-                 Giant kelp forests are home to a wide range of organisms, however, abiotic factors, such as temperature, may affect species populations and biological processes on a scale of hours to years. Furthermore, marine heatwaves (MHWs) are predicted to increase drastically in frequency, duration, range, and intensity due to anthropogenic climate change. Studies have shown that MHWs can have vast consequences, including impacts on species abundances, biogeographic range shifts, physiology, and reduced fisheries landings. In order to help local researchers and stakeholders understand temporal and spatial patterns of oceanic temperatures, we have created this app for easy SBC-LTER temperature data visualization.   
-                 
-                 Data source: 
-                 Reed, D., Miller, R. SBC LTER: Reef: Bottom Temperature: Continuous water temperature, ongoing since 2000 ver 26. Environmental Data Initiative. https://doi.org/10.6073/pasta/22ed009da1cf41cbf76490ab2c0c5949. Accessed 2022-02-06."
-                )
-                ) # end sidebarLayout
-    ), #end tabPanel Site Data Summaries
+    navbarMenu("About",
+      tabPanel("The App",
+               fluidRow(column(
+                 jumbotron("Welcome!", "This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).",button=FALSE)),
+                 br(),
+                 br(),
+               ),
+               fluidRow(column(align="center", 
+                               #imageOutput('home_image',inline = TRUE),
+                               h4(HTML('Want to learn more about how these data were collected? Check out the <a href="https://sbclter.msi.ucsb.edu/data/catalog/package/?package=knb-lter-sbc.13" target="_blank">data repository</a>.'))
+               )),
+               br(),
+               br(),
+               HTML('<center><img src = "sbc.jpeg"></center>'),
+               br(),
+               br(),
+               fluidRow(column(align="center",  
+                               h5(HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/esm-244-shiny-app" target="_blank">Github</a>.'))
+              ))),  
+      tabPanel("The Fisheries",
+               h2("Check out the most popular local marine invertebrate seafood in the Santa Barbara Channel!"),
+               sidebarLayout(
+                 sidebarPanel("",
+                    selectInput(inputId = "select_species", label = h3("Select box"), 
+                    choices = list("California Spiny Lobster" = "California Spiny Lobster", "Red Sea Urchin" = "Red Sea Urchin", "Mediterranean Mussel" = "Mediterranean Mussel"), 
+                    selected = "California Spiny Lobster"),
+                imageOutput(outputId = "img")
+              
+                    ),
+               mainPanel(
+                   h3(p("Information about this species")),
+                   # tags$head(tags$style(
+                   #   type="text/css",
+                   #   "#img img {max-width: 100%; width: 100%; height: auto}" #make image reactive to page size
+                   # )),
+                   # imageOutput("img")
+               ))),
+      tabPanel("The Authors",
+               sidebarLayout(
+                 sidebarPanel(
+                   h2("Who are we?"),
+                   p("We are graduate students at the University of California, Santa Barbara in ESM 244."),
+                   br(),
+                   img(src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png", height = 70, width = 200),
+                   br(),
+                 ),
+                 mainPanel(
+                   h2("Germán Silva"),
+                   h3(HTML('<a href= "https://german-sil.github.io/gds/" target="_blank">Personal website</a>')),
+                   br(),
+                   h2("Samantha Kuglen"),
+                   h3(HTML('<a href= "https://samanthakuglen.github.io/" target="_blank">Personal website</a>')),
+                   br(),
+                   h2("Erin de Leon Sanchez"),
+                   h3(HTML('<a href= "https://erindeleonsanchez.github.io/ESM-244-Website/" target="_blank">Personal website</a>'))
+                 )
+               )),
+             ),
     
     # Widget 2: Map 
     tabPanel("Map of Fishery Relevant Sites",
@@ -135,6 +175,26 @@ server <- function(input, output) {
       addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>% 
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
+  
+  # Widget 1: fisheries - reactively produce image of selected species
+  output$img <- renderImage({
+  #   filename <- normalizePath(file.path('./www/', paste(input$n, ".jpeg", sep="")))
+  #   
+  #   list(src = filename,
+  #        alt = paste("Image number", input$n))
+  #   }, deleteFile = FALSE
+  # )    
+    if(input$select_species == "California Spiny Lobster"){            
+    img(src = "image1.jpeg")
+  }       
+    else if(input$select_species == "Red Sea Urchin"){
+    img(src = "image2.jpeg")
+  }
+    else if(input$select_species == "Mediterranean Mussel"){
+    img(src = "image3.jpeg")
+  }
+  })
+    
   
 } #end server
 
