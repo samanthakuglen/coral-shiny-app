@@ -55,17 +55,17 @@ ui <- fluidPage(
                                h5(HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/esm-244-shiny-app" target="_blank">Github</a>.'))
               ))),  
       tabPanel("The Fisheries",
-               h2("Check out the most popular local marine invertebrate seafood in the Santa Barbara Channel!"),
+               h3("Check out the most popular local invertebrate seafood in the Santa Barbara Channel!"),
                sidebarLayout(
                  sidebarPanel("",
-                    selectInput(inputId = "select_species", label = h3("Select box"), 
-                    choices = list("California Spiny Lobster" = "California Spiny Lobster", "Red Sea Urchin" = "Red Sea Urchin", "Mediterranean Mussel" = "Mediterranean Mussel"), 
+                    selectInput("select_species", label = h3("Select box"), 
+                    choices = c("California Spiny Lobster", "Red Sea Urchin", "Mediterranean Mussel"), 
                     selected = "California Spiny Lobster"),
-                imageOutput(outputId = "img")
+                 imageOutput("species_img")
               
                     ),
                mainPanel(
-                   h3(p("Information about this species")),
+                   h4(p("Information about this species")),
                    # tags$head(tags$style(
                    #   type="text/css",
                    #   "#img img {max-width: 100%; width: 100%; height: auto}" #make image reactive to page size
@@ -83,18 +83,27 @@ ui <- fluidPage(
                  ),
                  mainPanel(
                    h2("Germán Silva"),
+                   br(),
+                   img(src = "german.jpg", height = 1500, width = 150),
+                   br(),
                    h3(HTML('<a href= "https://german-sil.github.io/gds/" target="_blank">Personal website</a>')),
                    br(),
                    h2("Samantha Kuglen"),
+                   br(),
+                   img(src = "sam.jpg", height = 150, width = 150),
+                   br(),
                    h3(HTML('<a href= "https://samanthakuglen.github.io/" target="_blank">Personal website</a>')),
                    br(),
                    h2("Erin de Leon Sanchez"),
+                   br(),
+                   img(src = "erin.jpeg", height = 150, width = 150),
+                   br(),
                    h3(HTML('<a href= "https://erindeleonsanchez.github.io/ESM-244-Website/" target="_blank">Personal website</a>'))
                  )
                )),
              ),
     
-    # Widget 2: Map 
+#     # Widget 2: Map 
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
@@ -106,11 +115,11 @@ ui <- fluidPage(
                  mainPanel(leafletOutput(outputId = "site_map"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
-    
-    # Widget 3: Temperature Time Series
+#     
+#     # Widget 3: Temperature Time Series
     tabPanel("Comparison of Site Temperature Profiles",
              sidebarLayout(
-                 sidebarPanel(dateRangeInput(inputId = "date_select", 
+                 sidebarPanel(dateRangeInput(inputId = "date_select",
                                              label = h3("Date range"),
                                              start = "2002-08-01",
                                              end = "2021-07-26"),
@@ -130,13 +139,13 @@ ui <- fluidPage(
 # Define server logic 
 server <- function(input, output) {
   
-  # Widget 3: Reactive Input
+  # # Widget 3: Reactive Input
   site_select <- reactive({
-    read_csv("sbc_lter_temp_subset.csv") %>% 
+    read_csv("sbc_lter_temp_subset.csv") %>%
       filter(SITE %in% input$site_code)
   }) # end site_select reactive
-  
-  # Widget 3: Output
+  # 
+  # # Widget 3: Output
   output$temp_plot <- renderPlot({
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
@@ -149,8 +158,8 @@ server <- function(input, output) {
            color = "Site",
            linetype = "Site")+
       ggtitle("Average Daily Temperature for Selected Site(s) and Dates")+
-      theme(plot.title = element_text(color = "#5b4f41"), 
-            plot.background = element_rect("white"), 
+      theme(plot.title = element_text(color = "#5b4f41"),
+            plot.background = element_rect("white"),
             panel.background = element_rect("#faf7f2"),
             panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
             axis.text = element_text(color = "#5b4f41"),
@@ -158,41 +167,48 @@ server <- function(input, output) {
             strip.background = element_rect("white"),
             axis.line = element_line(color = "#5b4f41"))
   })
-  
-  # Widget 2: Reactive Input
+  # 
+  # # Widget 2: Reactive Input
   site_choose <- reactive({
     read_csv("site_locations.csv") %>%
       filter(site %in% input$site_name)
   })
-  
-  # Widget 3: Output 
-  # All site markers appear on map in blue and the user input site appears in red
+  # 
+  # # Widget 3: Output 
+  # # All site markers appear on map in blue and the user input site appears in red
   output$site_map <- renderLeaflet({
     leaflet() %>%
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
       addTiles() %>%
       addMarkers(data = site_markers, ~long_all, ~lat_all, popup = ~site_all, label = ~site_all, icon = blue_icon) %>%
-      addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>% 
+      addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
-  # Widget 1: fisheries - reactively produce image of selected species
-  output$img <- renderImage({
-  #   filename <- normalizePath(file.path('./www/', paste(input$n, ".jpeg", sep="")))
-  #   
-  #   list(src = filename,
-  #        alt = paste("Image number", input$n))
-  #   }, deleteFile = FALSE
-  # )    
+  # Widget 1: 
+  species_select_reactive <- reactive({
+    message("in species_select_reactive, input$select_species =", input$select_species)
     if(input$select_species == "California Spiny Lobster"){            
-    img(src = "image1.jpeg")
-  }       
+      x <- img(src = "image1.jpeg")
+      # want to add information about the fishery as it pops up - best way to format this?
+      # https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster
+    }       
     else if(input$select_species == "Red Sea Urchin"){
-    img(src = "image2.jpeg")
-  }
+      x <- img(src = "image2.jpeg")
+      # want to add information about the fishery as it pops up - best way to format this?
+      # https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin
+    }
     else if(input$select_species == "Mediterranean Mussel"){
-    img(src = "image3.jpeg")
-  }
+      x <- img(src = "image3.jpeg")
+      # want to add information about the fishery as it pops up - best way to format this?
+      # https://caseagrant.ucsd.edu/seafood-profiles/mediterranean-mussel
+    }
+    return(x)
+  }) # end site_select reactive
+  
+  # Widget 1: fisheries - reactively produce image of selected species
+  output$species_img <- renderImage({
+    species_select_reactive()
   })
     
   
