@@ -58,19 +58,26 @@ ui <- fluidPage(
                h3("Check out the most popular local invertebrate seafood in the Santa Barbara Channel!"),
                sidebarLayout(
                  sidebarPanel("",
-                    selectInput("select_species", label = h3("Select box"), 
-                    choices = c("California Spiny Lobster", "Red Sea Urchin", "Mediterranean Mussel"), 
-                    selected = "California Spiny Lobster"),
-                 imageOutput("species_img")
+                      actionLink("species1", "California Spiny Lobster"),
+                      br(),
+                      actionLink("species2", "Red Sea Urchin"), 
+                      br(), 
+                      actionLink("species3", "Mediterranean Mussel")
+                 #    selectInput("select_species", label = h3("Select box"), 
+                 #    choices = c("California Spiny Lobster", "Red Sea Urchin", "Mediterranean Mussel"), 
+                 #    selected = "California Spiny Lobster"),
+                 # imageOutput("species_img")
               
                     ),
                mainPanel(
                    h4(p("Information about this species")),
-                   # tags$head(tags$style(
-                   #   type="text/css",
-                   #   "#img img {max-width: 100%; width: 100%; height: auto}" #make image reactive to page size
-                   # )),
-                   # imageOutput("img")
+                   imageOutput("display"),
+                   textOutput("information")
+                   # imageOutput("species_1_image"),
+                   # imageOutput("species_2_image"),
+                   # imageOutput("species_3_image")
+                   # br(),
+                   # imageOutput("species_img")
                ))),
       tabPanel("The Authors",
                sidebarLayout(
@@ -78,8 +85,7 @@ ui <- fluidPage(
                    h2("Who are we?"),
                    p("We are graduate students at the University of California, Santa Barbara in ESM 244."),
                    br(),
-                   img(src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png", height = 70, width = 200),
-                   br(),
+                   img(src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png", height = 70, width = 200)
                  ),
                  mainPanel(
                    h2("Germán Silva"),
@@ -139,13 +145,13 @@ ui <- fluidPage(
 # Define server logic 
 server <- function(input, output) {
   
-  # # Widget 3: Reactive Input
+# Widget 3: Reactive Input
   site_select <- reactive({
     read_csv("sbc_lter_temp_subset.csv") %>%
       filter(SITE %in% input$site_code)
   }) # end site_select reactive
-  # 
-  # # Widget 3: Output
+  
+  # Widget 3: Output
   output$temp_plot <- renderPlot({
     ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
       geom_line(aes(color = SITE, linetype = SITE))+
@@ -167,15 +173,15 @@ server <- function(input, output) {
             strip.background = element_rect("white"),
             axis.line = element_line(color = "#5b4f41"))
   })
-  # 
-  # # Widget 2: Reactive Input
+  
+  # Widget 2: Reactive Input
   site_choose <- reactive({
     read_csv("site_locations.csv") %>%
       filter(site %in% input$site_name)
   })
-  # 
-  # # Widget 3: Output 
-  # # All site markers appear on map in blue and the user input site appears in red
+
+  # Widget 2: Output 
+  # All site markers appear on map in blue and the user input site appears in red
   output$site_map <- renderLeaflet({
     leaflet() %>%
       setView(lat = sbLat, lng = sbLong, zoom = sbZoom) %>%
@@ -185,32 +191,66 @@ server <- function(input, output) {
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
-  # Widget 1: 
-  species_select_reactive <- reactive({
-    message("in species_select_reactive, input$select_species =", input$select_species)
-    if(input$select_species == "California Spiny Lobster"){            
-      x <- img(src = "image1.jpeg")
-      # want to add information about the fishery as it pops up - best way to format this?
-      # https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster
-    }       
-    else if(input$select_species == "Red Sea Urchin"){
-      x <- img(src = "image2.jpeg")
-      # want to add information about the fishery as it pops up - best way to format this?
-      # https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin
-    }
-    else if(input$select_species == "Mediterranean Mussel"){
-      x <- img(src = "image3.jpeg")
-      # want to add information about the fishery as it pops up - best way to format this?
-      # https://caseagrant.ucsd.edu/seafood-profiles/mediterranean-mussel
-    }
-    return(x)
-  }) # end site_select reactive
+# Conditional render image
+  values <- reactiveValues(species_1 = 0, species_2 = 0, species_3 = 0)
   
-  # Widget 1: fisheries - reactively produce image of selected species
-  output$species_img <- renderImage({
-    species_select_reactive()
-  })
+  observeEvent(input$species1, {
+    values$species_1 <- 1
+    values$species_2 <- 0
+    values$species_3 <- 0
     
+  })
+  
+  observeEvent(input$species2, {
+    values$species_1 <- 0
+    values$species_2 <- 1
+    values$species_3 <- 0
+    
+    
+  })
+  
+  observeEvent(input$species3, {
+    values$species_1 <- 0
+    values$species_2 <- 0
+    values$species_3 <- 1
+    
+    
+  })
+  
+  output$display <- renderImage({
+      if(values$species_1)
+        return(list(
+          src = "www/image1.jpeg", width = "60%", height = "70%",
+          contentType = 'image/png'
+        ))
+      else
+        if(values$species_2)
+          return(list(
+            src = "www/image2.jpeg", width = "60%", height = "70%",
+            contentType = 'image/png'
+          ))
+      else
+        if(values$species_3)
+          return(list(
+            src = "www/image3.jpeg", width = "60%", height = "70%",
+            contentType = 'image/png'
+          ))
+    }, deleteFile = FALSE)
+  
+  output$information <- renderText(
+    {
+      if(values$species_1)
+        paste("Button # 1 selected")
+      else
+        if(values$species_2)
+          paste("Button # 2 selected")
+      else
+        if(values$species_3)
+          paste("Button # 3 selected")
+      else
+        return()
+      
+    })
   
 } #end server
 
