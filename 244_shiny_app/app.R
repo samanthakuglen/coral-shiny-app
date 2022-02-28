@@ -72,12 +72,8 @@ ui <- fluidPage(
                mainPanel(
                    h4(p("Information about this species")),
                    imageOutput("display"),
-                   textOutput("information")
-                   # imageOutput("species_1_image"),
-                   # imageOutput("species_2_image"),
-                   # imageOutput("species_3_image")
-                   # br(),
-                   # imageOutput("species_img")
+                   textOutput("information"),
+                   uiOutput("link")
                ))),
       tabPanel("The Authors",
                sidebarLayout(
@@ -191,7 +187,7 @@ server <- function(input, output) {
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
-# Conditional render image
+# Widget 1: Action buttons for "About the fisheries"
   values <- reactiveValues(species_1 = 0, species_2 = 0, species_3 = 0)
   
   observeEvent(input$species1, {
@@ -240,17 +236,38 @@ server <- function(input, output) {
   output$information <- renderText(
     {
       if(values$species_1)
-        paste("Button # 1 selected")
+        paste("Visit California Sea Grant's page to learn more about the California Spiny Lobster!")
       else
         if(values$species_2)
-          paste("Button # 2 selected")
+          paste("Visit California Sea Grant's page to learn more about the Red Sea Urchin!")
       else
         if(values$species_3)
-          paste("Button # 3 selected")
+          paste("Visit California Sea Grant's page to learn more about the Mediterranean Mussel")
       else
         return()
       
     })
+  
+url1 <- a("California Sea Grant: Seafood profile: California Spiny Lobster", href="https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster")
+url2 <- a("California Sea Grant: Seafood profile: Red Sea Urchin", href="https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin")
+url3 <- a("California Sea Grant: Seafood profile: Red Sea Urchin", href="https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin")
+
+
+output$link <- renderUI({
+      if(values$species_1)
+        tagList("URL link:", url1)
+      else
+        if(values$species_2)
+          tagList("URL link:", url2)
+      else
+        if(values$species_3)
+          tagList("URL link:", url3)
+      else
+        return()
+      
+    })
+  
+  url <- a("California Sea Grant: California Seafood Profiles: California Spiny Lobster, href=https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster")
   
 } #end server
 
