@@ -32,7 +32,7 @@ ui <- fluidPage(
                    bootswatch = "sandstone"),
   
     # Homepage title
-    navbarPage("Historical Marine Heatwave Data in the Santa Barbara Channel",
+    navbarPage("Historical Seawater Temperature Data in the Santa Barbara Channel",
     
     # Widget 1: Site Info
     navbarMenu("About",
@@ -63,14 +63,8 @@ ui <- fluidPage(
                       actionLink("species2", "Red Sea Urchin"), 
                       br(), 
                       actionLink("species3", "Mediterranean Mussel")
-                 #    selectInput("select_species", label = h3("Select box"), 
-                 #    choices = c("California Spiny Lobster", "Red Sea Urchin", "Mediterranean Mussel"), 
-                 #    selected = "California Spiny Lobster"),
-                 # imageOutput("species_img")
-              
                     ),
                mainPanel(
-                   h4(p("Information about this species")),
                    imageOutput("display"),
                    textOutput("information"),
                    uiOutput("link")
@@ -216,21 +210,26 @@ server <- function(input, output) {
   output$display <- renderImage({
       if(values$species_1)
         return(list(
-          src = "www/image1.jpeg", width = "60%", height = "70%",
+          src = "www/image1.jpeg", width = "80%", height = "90%",
           contentType = 'image/png'
         ))
       else
         if(values$species_2)
           return(list(
-            src = "www/image2.jpeg", width = "60%", height = "70%",
+            src = "www/image2.jpeg", width = "80%", height = "90%",
             contentType = 'image/png'
           ))
       else
         if(values$species_3)
           return(list(
-            src = "www/image3.jpeg", width = "60%", height = "70%",
+            src = "www/image3.jpeg", width = "80%", height = "90%",
             contentType = 'image/png'
           ))
+      else{
+        return(list(
+          src = "www/uni.jpeg", width = "80%", height = "90%",
+          contentType = 'image/png'))
+      }
     }, deleteFile = FALSE)
   
   output$information <- renderText(
@@ -244,14 +243,16 @@ server <- function(input, output) {
         if(values$species_3)
           paste("Visit California Sea Grant's page to learn more about the Mediterranean Mussel")
       else
-        return()
+        return(
+          paste("The Santa Barbara Channel is one of the nation's richest sources of bountiful, sustainable and high-quality seafood. A local delicacy in Santa Barbara, CA is 'uni' or Red Sea Urchin. Check out local seasons and species at the link below. Photo Credit: Instagram @choisauceboss")
+        )
       
     })
   
 url1 <- a("California Sea Grant: Seafood profile: California Spiny Lobster", href="https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster")
 url2 <- a("California Sea Grant: Seafood profile: Red Sea Urchin", href="https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin")
 url3 <- a("California Sea Grant: Seafood profile: Red Sea Urchin", href="https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin")
-
+url4 <- a("Commercial Fishermen of Santa Barbara", href="https://www.cfsb.info/species-seasons")
 
 output$link <- renderUI({
       if(values$species_1)
@@ -263,7 +264,9 @@ output$link <- renderUI({
         if(values$species_3)
           tagList("URL link:", url3)
       else
-        return()
+        return(
+          tagList("URL link:", url4)
+        )
       
     })
   
