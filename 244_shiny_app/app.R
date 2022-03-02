@@ -88,7 +88,7 @@ ui <- fluidPage(
                    br(),
                    img(src = "sam.jpg", height = 150, width = 150),
                    br(),
-                   h3(HTML('<a href= "https://samanthakuglen.github.io/" target="_blank">Personal website</a>')),
+                   h3(HTML('<a href= "https://samanthakuglen.github.io/personal-website/" target="_blank">Personal website</a>')),
                    br(),
                    h2("Erin de Leon Sanchez"),
                    br(),
