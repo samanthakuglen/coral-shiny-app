@@ -29,7 +29,7 @@ blue_icon <- makeIcon(
 # Define UI for application 
 ui <- fluidPage(
   theme = bs_theme(version = 4,
-                   bootswatch = "sandstone"),
+                   bootswatch = "flatly"),
   
     # Homepage title
     navbarPage("Historical Seawater Temperature Data in the Santa Barbara Channel",
