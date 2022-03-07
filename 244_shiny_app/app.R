@@ -168,7 +168,7 @@ server <- function(input, output) {
                    width = 0.2)+
       labs(x = "Site Location",
            y = "Average Daily Temp (°C)")+
-      ggtitle("Distribution of Temperatures at Selected Site(s)")+
+      ggtitle("Boxplots of Temperatures at Selected Site(s)")+
       theme(plot.title = element_text(color = "#5b4f41"),
             plot.background = element_rect("white"),
             panel.background = element_rect("#faf7f2"),
