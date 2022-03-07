@@ -128,7 +128,20 @@ ui <- fluidPage(
                  ),
                  mainPanel(plotOutput(outputId = "temp_plot"))
              ) # end sidebarLayout Map Fish Sites
-    ) #end tabPanel Site Temp Profiles
+    ), #end tabPanel Site Temp Profiles
+
+#     # Widget 4: HeatMap 
+    tabPanel("Heatmap Visualizations",
+             sidebarLayout(
+               sidebarPanel(radioButtons(inputId = "site_heatmap_choose",
+                                         label = "Select a site:",
+                                         choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                                         choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                         )
+               ),
+               mainPanel(plotOutput(outputId = "site_heatmap"))
+        ) # end sidebarLayout Heatmap
+    ) #end tabPanel Heatmap
 ) # end navbarPage
 ) # end ui
 
@@ -164,6 +177,19 @@ server <- function(input, output) {
             axis.line = element_line(color = "#5b4f41"))
   })
   
+  # Widget 4: Reactive Input
+  site_heatmap_select <- reactive({
+    read_csv("sbc_heatmap.csv") %>%
+      filter(SITE %in% input$site_heatmap_choose)
+  })
+  
+  # Widget 4: Output 
+  output$site_heatmap <- renderPlot({
+    ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
+      geom_tile(aes(fill = avg_temp)) + scale_fill_viridis(option = "magma")
+    
+  })
+  
   # Widget 2: Reactive Input
   site_choose <- reactive({
     read_csv("site_locations.csv") %>%
@@ -181,6 +207,7 @@ server <- function(input, output) {
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
+  
 # Widget 1: Action buttons for "About the fisheries"
   values <- reactiveValues(species_1 = 0, species_2 = 0, species_3 = 0)
   
@@ -196,14 +223,12 @@ server <- function(input, output) {
     values$species_2 <- 1
     values$species_3 <- 0
     
-    
   })
   
   observeEvent(input$species3, {
     values$species_1 <- 0
     values$species_2 <- 0
     values$species_3 <- 1
-    
     
   })
   

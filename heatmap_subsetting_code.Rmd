@@ -1,0 +1,30 @@
+---
+title: "Untitled"
+author: "Samantha Kuglen"
+date: "3/7/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(lubridate)
+library(ggplot2)
+library(viridis)
+```
+
+```{r}
+sbc_heatmap <- read_csv(here("sbc_lter_temp_subset.csv")) 
+
+sbc_heatmap <- sbc_heatmap %>% mutate(
+    year = year(DATE_LOCAL),
+    month = month(DATE_LOCAL, label=T, abbr=T),
+    week = strftime(DATE_LOCAL,"%W"), 
+    wday = substring(wday(DATE_LOCAL, label=T, abbr=T),1,2),
+    day = day(DATE_LOCAL)
+)
+
+write_csv(x = sbc_heatmap, file = "sbc_heatmap.csv")
+
+ggplot(data = sbc_heatmap, aes(x=year,y=month)) +
+  geom_tile(aes(fill=avg_temp)) + scale_fill_viridis(option = "magma")
+```
