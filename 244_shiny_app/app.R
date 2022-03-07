@@ -237,16 +237,17 @@ server <- function(input, output) {
             axis.line = element_line(color = "#5b4f41"))
   })
   
-  # Widget 4: Reactive Input
+  # Widget 5: Reactive Input
   site_heatmap_select <- reactive({
     read_csv("sbc_heatmap.csv") %>%
       filter(SITE %in% input$site_heatmap_choose)
   })
   
-  # Widget 4: Output 
+  # Widget 5: Output 
   output$site_heatmap <- renderPlot({
     ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
-      geom_tile(aes(fill = avg_temp)) + scale_fill_viridis(option = "magma")
+      geom_tile(aes(fill = avg_temp)) +
+      scale_fill_viridis_c(option = "magma")
     
   })
   
