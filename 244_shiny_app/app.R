@@ -9,6 +9,7 @@ library(tmaptools)
 library(leaflet)
 library(gghighlight)
 library(yonder)
+library(ggbeeswarm)
 
 # Read in data for site map markers (Widget 2)
 site_markers <- read_csv("site_locations_all.csv")
@@ -29,7 +30,7 @@ blue_icon <- makeIcon(
 # Define UI for application 
 ui <- fluidPage(
   theme = bs_theme(version = 4,
-                   bootswatch = "sandstone"),
+                   bootswatch = "flatly"),
   
     # Homepage title
     navbarPage("Historical Seawater Temperature Data in the Santa Barbara Channel",
@@ -69,6 +70,24 @@ ui <- fluidPage(
                    textOutput("information"),
                    uiOutput("link")
                ))),
+      tabPanel("The Data",
+               fluidRow(column(
+                 jumbotron("It is important to explore your data prior to analyzing it. One way that this can be accomplished through exploratory data visualization like histograms and box plots. By exploring data this way we are able to make decisions on what type of analysis approaches are appropriate for the data.",button=FALSE)),
+                 br(),
+                 br(),
+               ),
+               sidebarLayout(
+                 sidebarPanel(
+                   checkboxGroupInput(inputId = "reef_code",
+                                      label = h3("Choose Site(s):"),
+                               choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                               choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor"),
+                               selected = "ABUR") # end select box input
+                 ), # end sidebar Panel
+                 mainPanel(plotOutput(outputId = "boxplot"),
+                           plotOutput(outputId = "histo_plot"))
+               ) #end sidebar Layout
+               ),# end tab panel
       tabPanel("The Authors",
                sidebarLayout(
                  sidebarPanel(
@@ -88,7 +107,7 @@ ui <- fluidPage(
                    br(),
                    img(src = "sam.jpg", height = 150, width = 150),
                    br(),
-                   h3(HTML('<a href= "https://samanthakuglen.github.io/" target="_blank">Personal website</a>')),
+                   h3(HTML('<a href= "https://samanthakuglen.github.io/personal-website/" target="_blank">Personal website</a>')),
                    br(),
                    h2("Erin de Leon Sanchez"),
                    br(),
@@ -120,7 +139,7 @@ ui <- fluidPage(
                                              start = "2002-08-01",
                                              end = "2021-07-26"),
                             checkboxGroupInput(inputId = "site_code",
-                                               label = "Choose site(s):",
+                                               label = h3("Choose site(s):"),
                                                choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
                                                choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor"),
                                                selected = c("ABUR", "AHND")
@@ -128,13 +147,67 @@ ui <- fluidPage(
                  ),
                  mainPanel(plotOutput(outputId = "temp_plot"))
              ) # end sidebarLayout Map Fish Sites
-    ) #end tabPanel Site Temp Profiles
+    ), #end tabPanel Site Temp Profiles
+
+#     # Widget 4: HeatMap 
+    tabPanel("Heatmap Visualizations",
+             sidebarLayout(
+               sidebarPanel(radioButtons(inputId = "site_heatmap_choose",
+                                         label = "Select a site:",
+                                         choiceValues = c("ABUR", "AHND", "AQUE", "BULL", "CARP", "GOLB", "IVEE", "MOHK", "NAPL", "SCDI", "SCTW"),
+                                         choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
+                                         )
+               ),
+               mainPanel(plotOutput(outputId = "site_heatmap"))
+        ) # end sidebarLayout Heatmap
+    ) #end tabPanel Heatmap
 ) # end navbarPage
 ) # end ui
 
 # Define server logic 
 server <- function(input, output) {
   
+# Widget 4: Reactive Input
+  reef_select <- reactive({
+    read_csv("sbc_lter_temp_subset.csv") %>%
+      filter(SITE %in% input$reef_code)
+  }) 
+
+# Widget 4a: Reactive Output Boxplots
+  output$boxplot <- renderPlot({
+    ggplot(data = reef_select(), aes(x= SITE, y= avg_temp))+
+      geom_boxplot(aes(color = SITE),
+                   fill = NA,
+                   width = 0.2)+
+      labs(x = "Site Location",
+           y = "Average Daily Temp (°C)")+
+      ggtitle("Boxplots of Temperatures at Selected Site(s)")+
+      theme(plot.title = element_text(color = "#5b4f41"),
+            plot.background = element_rect("white"),
+            panel.background = element_rect("#faf7f2"),
+            panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
+            axis.text = element_text(color = "#5b4f41"),
+            axis.title = element_text(color = "#5b4f41"),
+            strip.background = element_rect("white"),
+            axis.line = element_line(color = "#5b4f41"))
+  })
+# Widget 4b: Reactive Output Histograms
+  output$histo_plot <- renderPlot({
+    ggplot(data = reef_select(), aes(x= avg_temp))+
+      geom_histogram(aes(color = SITE))+
+      facet_wrap(~SITE)+
+      labs(y = "Occurences",
+           x = "Average Daily Temp (°C)")+
+      ggtitle("Distribution of Temperatures at Selected Site(s)")+
+      theme(plot.title = element_text(color = "#5b4f41"),
+            plot.background = element_rect("white"),
+            panel.background = element_rect("#faf7f2"),
+            panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
+            axis.text = element_text(color = "#5b4f41"),
+            axis.title = element_text(color = "#5b4f41"),
+            strip.background = element_rect("white"),
+            axis.line = element_line(color = "#5b4f41"))
+  })
 # Widget 3: Reactive Input
   site_select <- reactive({
     read_csv("sbc_lter_temp_subset.csv") %>%
@@ -164,6 +237,20 @@ server <- function(input, output) {
             axis.line = element_line(color = "#5b4f41"))
   })
   
+  # Widget 5: Reactive Input
+  site_heatmap_select <- reactive({
+    read_csv("sbc_heatmap.csv") %>%
+      filter(SITE %in% input$site_heatmap_choose)
+  })
+  
+  # Widget 5: Output 
+  output$site_heatmap <- renderPlot({
+    ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
+      geom_tile(aes(fill = avg_temp)) +
+      scale_fill_viridis_c(option = "magma")
+    
+  })
+  
   # Widget 2: Reactive Input
   site_choose <- reactive({
     read_csv("site_locations.csv") %>%
@@ -181,6 +268,7 @@ server <- function(input, output) {
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
   
+  
 # Widget 1: Action buttons for "About the fisheries"
   values <- reactiveValues(species_1 = 0, species_2 = 0, species_3 = 0)
   
@@ -196,14 +284,12 @@ server <- function(input, output) {
     values$species_2 <- 1
     values$species_3 <- 0
     
-    
   })
   
   observeEvent(input$species3, {
     values$species_1 <- 0
     values$species_2 <- 0
     values$species_3 <- 1
-    
     
   })
   
