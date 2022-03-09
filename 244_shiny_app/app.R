@@ -3,22 +3,21 @@ library(shiny)
 library(tidyverse)
 library(bslib)
 library(here)
-library(sf)
-library(tmap)
-library(tmaptools)
 library(leaflet)
 library(gghighlight)
 library(yonder)
 library(ggbeeswarm)
 
+### Setup for Widget 2
 # Read in data for site map markers (Widget 2)
 site_markers <- read_csv("site_locations_all.csv")
 
-# Set bounding box coordinates for map (in Widget 2) and add red and blue map icons
+# Set bounding box coordinates for map (in Widget 2) 
 sbLat <- 34.317664
 sbLong <- -119.757643
 sbZoom <- 9.48
 
+# Create red and blue map icons (Widget 2)
 red_icon <- makeIcon(
   iconUrl = "https://img.icons8.com/offices/72/marker.png",
   iconWidth = 40, iconHeight = 40)
@@ -27,15 +26,15 @@ blue_icon <- makeIcon(
   iconUrl = "https://img.icons8.com/ultraviolet/344/marker.png",
   iconWidth = 40, iconHeight = 40)
 
-# Define UI for application 
+### Define UI for application 
 ui <- fluidPage(
   theme = bs_theme(version = 4,
                    bootswatch = "flatly"),
   
-    # Homepage title
+#   # Homepage Title
     navbarPage("Historical Seawater Temperature Data in the Santa Barbara Channel",
     
-    # Widget 1: Site Info
+#   # Widget 1: Site About Info
     navbarMenu("About",
       tabPanel("The App",
                fluidRow(column(
@@ -114,7 +113,7 @@ ui <- fluidPage(
                )),
              ),
     
-#     # Widget 2: Map 
+#   # Widget 2: Map of Sites 
     tabPanel("Map of Fishery Relevant Sites",
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
