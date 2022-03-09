@@ -123,7 +123,8 @@ ui <- fluidPage(
                                            choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                            )
                               ),
-                 mainPanel(leafletOutput(outputId = "site_map"))
+                 mainPanel(leafletOutput(outputId = "site_map"),
+                           textOutput("site_description"))
              ) # end sidebarLayout
     ), #end tabPanel historical heatwave
 #     
@@ -232,6 +233,7 @@ server <- function(input, output) {
             strip.background = element_rect("white"),
             axis.line = element_line(color = "#5b4f41"))
   })
+
   
   # Widget 5: Reactive Input
   site_heatmap_select <- reactive({
@@ -263,6 +265,42 @@ server <- function(input, output) {
       addMarkers(data = site_choose(), ~long, ~lat, popup = ~site, label = ~site, icon = red_icon) %>%
       addProviderTiles(providers$Esri.WorldStreetMap)
   })
+  
+  #Widget 2b output:
+  output$site_description <- renderText({
+    if(input$site_name == "ABUR") 
+      paste("Site ABUR: Arroyo Burro Reef is located on the Santa Barbara Channel near the mouth of Arroyo Burro Creek and Beach. Depth ranges from 5.4 to 7 meters.")
+    else
+      if(input$site_name == "AHND")
+        paste("Site AHND: Arroyo Hondo Reef is located on the Santa Barbara Channel near the east end of Gaviota State Park, CA. Depth ranges from -4.3m to -6.6 meters.")
+    else
+      if(input$site_name == "AQUE")
+        paste("Site AQUE: Arroyo Quemado Reef depth range from 5.4 m to 10.7 m. Reference on Land is close to US101/Arroyo Quemada Ln.")
+    else
+      if(input$site_name == "BULL")
+        paste("Site BULL: Bulito has three permanent transects: Transect I, III, VI. Depth Range from -5.5 to -7.3. Reference on land is close to Ranch Real road and Hollister Ranch road crossing section.")
+    else
+      if(input$site_name == "CARP")
+        paste("Site CARP: Carpinteria Reef is located on the Santa Barbara Channel offshore of the Carpinteria Salt Marsh. Depth range is from -2.2 to -8.8 meters")
+    else
+      if(input$site_name == "GOLB")
+        paste("Site GOLB: Goleta Bay is located on the Santa Barbara Channel east of Goleta Pier. Depth range is -4.2 to -5 meters.")
+    else
+      if(input$site_name == "MOHK")
+        paste("Site MOHK: Mohawk Reef depth ranges from 4.5m to 6.0 m. Reference on land is Mohawk Rd / Edgewater Way.")
+    else
+      if(input$site_name == "IVEE")
+        paste("Site IVEE: Isla Vista (IV) Reef is located on the Santa Barbara Channel near the University of California Santa Barbara, CA. Depth range is from -8.2 to -8.8 meters.")
+    else
+      if(input$site_name == "NAPL")
+        paste("Site NAPL: Naples Reef is located on the Santa Barbara Channel near the community of Naples and Dos Pueblos Canyon, Santa Barbara County, CA. Depth ranges from -5.9 to -13.4 meters.")
+    else
+      if(input$site_name == "SCDI")
+        paste("Site SCDI: Santa Cruz Island, Diablo")
+    else
+      if(input$site_name == "SCTW")
+        paste("Site SCTW: Santa Cruz Island, Twin Harbor West")
+    })
   
   
 # Widget 1: Action buttons for "About the fisheries"
