@@ -372,7 +372,7 @@ server <- function(input, output) {
 #   Widget 3: "Comparison of Site Temp Profiles" - Output
     output$temp_plot <- renderPlot({
       ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
-        geom_line(aes(color = SITE, linetype = SITE))+
+        geom_line(aes(color = SITE))+
         gghighlight(unhighlighted_params = list(alpha = 0.5),
                     use_direct_label = FALSE)+
         facet_wrap(~SITE)+
@@ -380,7 +380,6 @@ server <- function(input, output) {
         labs(x = "Date",
              y = "Average Daily Temperature (°C)",
              color = "Site",
-             linetype = "Site",
              subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)")+
         ggtitle("Average Daily Temperature for Selected Site(s) and Dates")+
         theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
