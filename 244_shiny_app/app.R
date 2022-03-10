@@ -70,7 +70,7 @@ ui <- fluidPage(
                ))),
       tabPanel("The Data",
                fluidRow(column(
-                 jumbotron("It is important to explore your data prior to analyzing it. One way that this can be accomplished through exploratory data visualization like histograms and box plots. By exploring data this way we are able to make decisions on what type of analysis approaches are appropriate for the data.",button=FALSE)),
+                 jumbotron("Data used here were subset and wrangled into a daily average data frame. It is important to explore your data prior to analyzing it. One way that this can be accomplished through exploratory data visualization like histograms and box plots. By exploring data this way we are able to make decisions on what type of analysis approaches are appropriate for the data.",button=FALSE)),
                  br(),
                  br(),
                ),
