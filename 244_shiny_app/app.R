@@ -265,33 +265,49 @@ server <- function(input, output) {
                      fill = NA,
                      width = 0.2)+
         labs(x = "Site Location",
-             y = "Average Daily Temp (°C)")+
+             y = "Average Daily Temp (°C)",
+             color = "Site",
+             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)")+
         ggtitle("Boxplots of Temperatures at Selected Site(s)")+
-        theme(plot.title = element_text(color = "#5b4f41"),
+        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
+              plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
               plot.background = element_rect("white"),
               panel.background = element_rect("#faf7f2"),
               panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
-              axis.text = element_text(color = "#5b4f41"),
-              axis.title = element_text(color = "#5b4f41"),
+              axis.text = element_text(color = "#5b4f41", size = 12),
+              axis.title = element_text(color = "#5b4f41", size = 15),
               strip.background = element_rect("white"),
-              axis.line = element_line(color = "#5b4f41"))
+              axis.line = element_line(color = "#5b4f41"),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 14),
+              legend.background = element_blank(),
+              legend.box.background = element_rect(colour = "black"))
     })
 #   Widget 1e: "The Data" - Reactive Output Histograms
     output$histo_plot <- renderPlot({
       ggplot(data = reef_select(), aes(x= avg_temp))+
-        geom_histogram(aes(color = SITE))+
+        geom_histogram(aes(color = SITE, fill = SITE), alpha = 0.7)+
         facet_wrap(~SITE)+
         labs(y = "Occurences",
-             x = "Average Daily Temp (°C)")+
+             x = "Average Daily Temp (°C)",
+             fill = "Site",
+             color = "Site",
+             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)")+
         ggtitle("Distribution of Temperatures at Selected Site(s)")+
-        theme(plot.title = element_text(color = "#5b4f41"),
+        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
+              plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
               plot.background = element_rect("white"),
               panel.background = element_rect("#faf7f2"),
               panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
-              axis.text = element_text(color = "#5b4f41"),
-              axis.title = element_text(color = "#5b4f41"),
+              axis.text = element_text(color = "#5b4f41", size = 12),
+              axis.title = element_text(color = "#5b4f41", size = 15),
               strip.background = element_rect("white"),
-              axis.line = element_line(color = "#5b4f41"))
+              axis.line = element_line(color = "#5b4f41"),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 14),
+              legend.background = element_blank(),
+              legend.box.background = element_rect(colour = "black")) +
+        scale_alpha(guide = "none") # suppress duplicate legend from having fill and color
     })
     
 #   Widget 2: "Map of Sites" - Reactive Input
@@ -364,16 +380,22 @@ server <- function(input, output) {
         labs(x = "Date",
              y = "Average Daily Temperature (°C)",
              color = "Site",
-             linetype = "Site")+
+             linetype = "Site",
+             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)")+
         ggtitle("Average Daily Temperature for Selected Site(s) and Dates")+
-        theme(plot.title = element_text(color = "#5b4f41"),
+        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
+              plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
               plot.background = element_rect("white"),
               panel.background = element_rect("#faf7f2"),
               panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
-              axis.text = element_text(color = "#5b4f41"),
-              axis.title = element_text(color = "#5b4f41"),
+              axis.text = element_text(color = "#5b4f41", size = 12),
+              axis.title = element_text(color = "#5b4f41", size = 15),
               strip.background = element_rect("white"),
-              axis.line = element_line(color = "#5b4f41"))
+              axis.line = element_line(color = "#5b4f41"),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 14),
+              legend.background = element_blank(),
+              legend.box.background = element_rect(colour = "black")) 
     })
     
 #   Widget 4: "Heatmap" - Reactive Input
@@ -386,7 +408,25 @@ server <- function(input, output) {
     output$site_heatmap <- renderPlot({
       ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
         geom_tile(aes(fill = avg_temp)) +
-        scale_fill_viridis_c(option = "magma")
+        scale_fill_viridis_c(option = "magma") + 
+        labs(x = "Year",
+             y = "Month",
+             fill = "Average Daily \nTemp (°C)",
+             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)") +
+        ggtitle("Heatmap Visualization By Month Per Year") +
+        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
+              plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
+              plot.background = element_rect("white"),
+              panel.background = element_rect("#faf7f2"),
+              panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
+              axis.text = element_text(color = "#5b4f41", size = 12),
+              axis.title = element_text(color = "#5b4f41", size = 15),
+              strip.background = element_rect("white"),
+              axis.line = element_line(color = "#5b4f41"),
+              legend.text = element_text(size = 12),
+              legend.title = element_text(size = 14),
+              legend.background = element_blank(),
+              legend.box.background = element_rect(colour = "black")) 
     })
     
 
