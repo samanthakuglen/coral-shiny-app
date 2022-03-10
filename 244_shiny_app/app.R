@@ -90,7 +90,7 @@ ui <- fluidPage(
                sidebarLayout(
                  sidebarPanel(
                    h2("Who are we?"),
-                   p("We are graduate students at the University of California, Santa Barbara in ESM 244."),
+                   p("We are graduate students at the University of California, Santa Barbara in Advanced Data Analysis (ESM 244)."),
                    br(),
                    img(src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png", height = 70, width = 200)
                  ),
@@ -104,7 +104,7 @@ ui <- fluidPage(
                    br(),
                    br(),
                    h3(HTML('<a href= "https://erindeleonsanchez.github.io/ESM-244-Website/" target="_blank">Erin de Leon Sanchez</a>')),
-                   img(src = "erin.jpeg", height = 150, width = 200),
+                   img(src = "erin.jpeg", height = 150, width = 150),
                    br(),
                    br(),
                    br(),
@@ -113,7 +113,7 @@ ui <- fluidPage(
              ),
     
 #   Widget 2: Map of Sites 
-    tabPanel("Map of Fishery Relevant Sites",
+    tabPanel("Map of Sites",
              sidebarLayout(
                  sidebarPanel(radioButtons(inputId = "site_name",
                                            label = "Select a site to highlight:",
@@ -237,13 +237,13 @@ server <- function(input, output) {
   
     output$link <- renderUI({
       if(values$species_1)
-        tagList("URL link:", url1)
+        tagList(url1)
       else
         if(values$species_2)
-          tagList("URL link:", url2)
+          tagList(url2)
       else
         if(values$species_3)
-          tagList("URL link:", url3)
+          tagList(url3)
       else
         return(
           tagList("URL link:", url4)
