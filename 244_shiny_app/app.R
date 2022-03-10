@@ -402,6 +402,7 @@ server <- function(input, output) {
     site_heatmap_select <- reactive({
       read_csv("sbc_heatmap.csv") %>%
         filter(SITE %in% input$site_heatmap_choose)
+      
     })
     
 #   Widget 4: "Heatmap" - Output 
