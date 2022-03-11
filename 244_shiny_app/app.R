@@ -6,6 +6,7 @@ library(leaflet)
 library(gghighlight)
 library(yonder)
 library(ggbeeswarm)
+library(plotly)
 
 ### Setup for Widget 2
 # Read in data for site map markers 
@@ -153,7 +154,7 @@ ui <- fluidPage(
                                          choiceNames = c("Arroyo Burro", "Arroyo Hondo", "Arroyo Quemado", "Bulito", "Carpinteria", "Goleta Bay", "Isla Vista", "Mohawk", "Naples", "Santa Cruz Island, Diablo", "Santa Cruz Island, Twin Harbor")
                                          )
                ),
-               mainPanel(plotOutput(outputId = "site_heatmap"))
+               mainPanel(plotlyOutput(outputId = "site_heatmap"))
         ) # end sidebarLayout Heatmap
     ) #end tabPanel Heatmap
 
@@ -404,8 +405,9 @@ server <- function(input, output) {
     })
     
 #   Widget 4: "Heatmap" - Output 
-    output$site_heatmap <- renderPlot({
-      ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
+    output$site_heatmap <- renderPlotly({
+      ggplotly(
+        ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
         geom_tile(aes(fill = monthly_mean)) +
         scale_fill_viridis_c(option = "magma") + 
         labs(x = "Year",
@@ -426,7 +428,8 @@ server <- function(input, output) {
               legend.title = element_text(size = 14),
               legend.background = element_blank(),
               legend.box.background = element_rect(colour = "black")) 
-    })
+      )
+         })
     
 
 } #end server

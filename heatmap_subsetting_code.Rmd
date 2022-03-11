@@ -27,7 +27,7 @@ sbc_heatmap <- sbc_heatmap %>% mutate(
 
 monthly_temps <- sbc_heatmap %>% 
   group_by(SITE, year, month) %>% 
-  summarize(monthly_mean = mean(avg_temp, na.rm = TRUE))
+  summarize(monthly_mean = round(mean(avg_temp, na.rm = TRUE),3))
 
 write_csv(x = monthly_temps, file = "sbc_heatmap.csv")
 
