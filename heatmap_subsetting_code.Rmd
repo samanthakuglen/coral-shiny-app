@@ -8,6 +8,8 @@ output: html_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(lubridate)
+library(tidyverse)
+library(here)
 library(ggplot2)
 library(viridis)
 ```
@@ -23,7 +25,11 @@ sbc_heatmap <- sbc_heatmap %>% mutate(
     day = day(DATE_LOCAL)
 )
 
-write_csv(x = sbc_heatmap, file = "sbc_heatmap.csv")
+monthly_temps <- sbc_heatmap %>% 
+  group_by(SITE, year, month) %>% 
+  summarize(monthly_mean = mean(avg_temp, na.rm = TRUE))
+
+write_csv(x = monthly_temps, file = "sbc_heatmap.csv")
 
 ggplot(data = sbc_heatmap, aes(x=year,y=month)) +
   geom_tile(aes(fill=avg_temp)) + scale_fill_viridis(option = "magma")

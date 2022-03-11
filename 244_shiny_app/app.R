@@ -406,11 +406,11 @@ server <- function(input, output) {
 #   Widget 4: "Heatmap" - Output 
     output$site_heatmap <- renderPlot({
       ggplot(data = site_heatmap_select(), aes(x=year, y=month)) +
-        geom_tile(aes(fill = avg_temp)) +
+        geom_tile(aes(fill = monthly_mean)) +
         scale_fill_viridis_c(option = "magma") + 
         labs(x = "Year",
              y = "Month",
-             fill = "Average Daily \nTemp (°C)",
+             fill = "Average Monthly \nTemp (°C)",
              subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)") +
         ggtitle("Heatmap Visualization By Month Per Year") +
         theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
