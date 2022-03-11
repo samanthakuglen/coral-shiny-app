@@ -32,7 +32,7 @@ ui <- fluidPage(
                    bootswatch = "flatly"),
   
 #   Homepage Title
-    navbarPage("Historical Seawater Temperature Data in the Santa Barbara Channel",
+    navbarPage("Historical Ocean Temperature Data in the Santa Barbara Channel",
     
 #   Widget 1: Site About Info
     navbarMenu("About",
