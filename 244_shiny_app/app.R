@@ -226,7 +226,7 @@ server <- function(input, output) {
             paste("Visit California Sea Grant's page to learn more about the Mediterranean Mussel")
         else
           return(
-            paste("The Santa Barbara Channel is one of the nation's richest sources of bountiful, sustainable and high-quality seafood. A local delicacy in Santa Barbara, CA is 'uni' or Red Sea Urchin. Check out local seasons and species at the link below. Photo Credit: Instagram @choisauceboss")
+            paste("The Santa Barbara Channel is one of the nation's richest sources of bountiful, sustainable and high-quality seafood. However, with increases in ocean warming and marine heatwaves, such fisheries may be affected. Pictured here is a local delicacy in Santa Barbara, CA is 'uni' or Red Sea Urchin. Check out local seasons and species at the link below. Photo Credit: Instagram @choisauceboss")
           )
       })
 #   Widget 1c: "The Fisheries" - Output Links   
