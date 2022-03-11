@@ -427,7 +427,8 @@ server <- function(input, output) {
               legend.text = element_text(size = 12),
               legend.title = element_text(size = 14),
               legend.background = element_blank(),
-              legend.box.background = element_rect(colour = "black")) 
+              legend.box.background = element_rect(colour = "black")) +
+          scale_y_discrete(limits = rev(month.abb))
       )
          })
     
