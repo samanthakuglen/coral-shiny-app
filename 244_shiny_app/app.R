@@ -414,18 +414,18 @@ server <- function(input, output) {
              y = "Month",
              fill = "Average Monthly \nTemp (°C)",
              subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)") +
-        ggtitle("Heatmap Visualization By Month Per Year") +
-        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
+        ggtitle("Heatmap of Average Monthly Temperature (°C)  By Month Per Year") +
+        theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 14),
               plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
               plot.background = element_rect("white"),
               panel.background = element_rect("#faf7f2"),
               panel.grid = element_line(linetype= "longdash", color = "#f0ece1"),
               axis.text = element_text(color = "#5b4f41", size = 12),
-              axis.title = element_text(color = "#5b4f41", size = 15),
+              axis.title = element_text(color = "#5b4f41", size = 13),
               strip.background = element_rect("white"),
               axis.line = element_line(color = "#5b4f41"),
               legend.text = element_text(size = 12),
-              legend.title = element_text(size = 14),
+              legend.title = element_text(size = 10),
               legend.background = element_blank(),
               legend.box.background = element_rect(colour = "black")) +
           scale_y_discrete(limits = rev(month.abb))
