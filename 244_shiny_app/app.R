@@ -25,19 +25,33 @@ blue_icon <- makeIcon(
   iconUrl = "https://img.icons8.com/ultraviolet/344/marker.png",
   iconWidth = 40, iconHeight = 40)
 
-### Define UI for application 
+#Define UI
 ui <- fluidPage(
   theme = bs_theme(version = 4, bootswatch = "flatly"),
+  tags$head(
+    tags$style(
+      HTML("
+        .welcome-section {
+          background-color: #e1ecf4;
+          padding: 20px;
+          border-radius: 5px;
+        }
+      ")
+    )
+  ),
   navbarPage(
-    "Historical Ocean Temperature Data in the Santa Barbara Channel",
+    "Historical Ocean Temperature Data at Reef Sites in the Santa Barbara Channel",
     # Widget 1: Site About Info
     navbarMenu("About",
                tabPanel("The App",
                         fluidRow(
                           column(
                             width = 12,
-                            h2("Welcome!"),
-                            p("This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).")
+                            div(
+                              class = "welcome-section",
+                              h2("Welcome!"),
+                              p("This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).")
+                            )
                           )
                         ),
                         fluidRow(
@@ -59,6 +73,7 @@ ui <- fluidPage(
                           )
                         )
                ),
+
                tabPanel("The Fisheries",
                         h3("Check out the most popular local invertebrate seafood in the Santa Barbara Channel!"),
                         sidebarLayout(
@@ -114,7 +129,7 @@ ui <- fluidPage(
                             br(),
                             img(
                               src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png",
-                              height = 70, width = 200
+                              height = 30, width = 400
                             )
                           ),
                           mainPanel(
@@ -123,7 +138,7 @@ ui <- fluidPage(
                             br(),
                             br(),
                             h3(HTML('<a href= "https://samanthakuglen.github.io/personal-website/" target="_blank">Samantha Kuglen</a>')),
-                            img(src = "sam.jpg", height = 200, width = 150),
+                            img(src = "sam.jpg", height = 210, width = 150),
                             br(),
                             br(),
                             h3(HTML('<a href= "https://erindeleonsanchez.github.io/ESM-244-Website/" target="_blank">Erin de Leon Sanchez</a>')),
@@ -222,24 +237,24 @@ server <- function(input, output) {
     output$display <- renderImage({
       if(values$species_1)
         return(list(
-          src = "www/image1.jpeg", width = "80%", height = "90%",
+          src = "www/image1.jpeg", width = "60%", height = "90%",
           contentType = 'image/png'
         ))
       else
         if(values$species_2)
           return(list(
-            src = "www/image2.jpeg", width = "80%", height = "90%",
+            src = "www/image2.jpeg", width = "60%", height = "90%",
             contentType = 'image/png'
           ))
       else
         if(values$species_3)
           return(list(
-            src = "www/image3.jpeg", width = "80%", height = "90%",
+            src = "www/image3.jpeg", width = "60%", height = "90%",
             contentType = 'image/png'
           ))
       else{
         return(list(
-          src = "www/uni.jpeg", width = "80%", height = "90%",
+          src = "www/uni.jpeg", width = "60%", height = "90%",
           contentType = 'image/png'))
       }
     }, deleteFile = FALSE)
