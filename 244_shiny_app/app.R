@@ -123,7 +123,7 @@ ui <- fluidPage(
                             br(),
                             br(),
                             h3(HTML('<a href= "https://samanthakuglen.github.io/personal-website/" target="_blank">Samantha Kuglen</a>')),
-                            img(src = "sam.jpg", height = 130, width = 150),
+                            img(src = "sam.jpg", height = 200, width = 150),
                             br(),
                             br(),
                             h3(HTML('<a href= "https://erindeleonsanchez.github.io/ESM-244-Website/" target="_blank">Erin de Leon Sanchez</a>')),
