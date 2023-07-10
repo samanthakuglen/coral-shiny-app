@@ -57,6 +57,18 @@ ui <- fluidPage(
         margin-bottom: 20px;
         font-family: Verdana, sans-serif;
       }
+      .fade-in {
+        animation: fade-in 1s ease-in-out;
+      }
+
+      @keyframes fade-in {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     "))
   ),
   navbarPage(
@@ -74,19 +86,28 @@ ui <- fluidPage(
                           tags$h2("Welcome!",
                                   style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"),
                           tags$p(
-                            "This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).",
+                            "This app allows users to visualize benthic ocean temperature data collected at reef sites at the Santa Barbara Coastal Long Term Ecological Research site",
+                            tags$a("(SBC LTER).", href = "https://sbclter.msi.ucsb.edu/"),
+                            br(), br(),
+                            "The SBC LTER program, based at the UCSB Marine Science Institute, was established in 2000 to study the coastal kelp forest ecosystems in southern California. Its research focuses on the dynamic ocean currents and climate patterns of the region, including the El Niño-Southern Oscillation and the Pacific Decadal Oscillation. Covering a 10,000 square kilometer area, the program investigates the northern part of the Southern California Bight, which includes the Santa Barbara Channel, coastal watersheds, estuaries, and sandy beaches. SBC LTER is affiliated with the NSF's LTER Network, which supports long-term ecological research across various sites since 1980.",
                             style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"
                           ),
                           fluidRow(
                             column(
                               width = 6,
                               style = "display:flex; align-items:center; justify-content:left;",
-                              img(src = "sbc.jpeg", style = "height: 350px; margin: 20 auto;")
+                              div(
+                                class = "fade-in",
+                                img(src = "sbc.jpeg", style = "height: 350px; margin: 20 auto;")
+                              )
                             ),
                             column(
                               width = 6,
                               style = "display:flex; align-items:center; justify-content:right;",
-                              img(src = "rocky_reef.jpg", style = "height: 350px; margin: 0 auto;")
+                              div(
+                                class = "fade-in",
+                                img(src = "rocky_reef.jpg", style = "height: 350px; margin: 0 auto;")
+                              )
                             )
                           ),
                           tags$h4(
@@ -94,7 +115,7 @@ ui <- fluidPage(
                             style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"
                           ),
                           tags$h5(
-                            HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/esm-244-shiny-app" target="_blank">Github</a>.'),
+                            HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/coral-shiny-app" target="_blank">Github</a>.'),
                             style = "font-family: Verdana, sans-serif; text-align: center;"
                           )
                         )
@@ -439,21 +460,18 @@ server <- function(input, output) {
     site_select <- reactive({
       read_csv("sbc_lter_temp_subset.csv") %>%
         filter(SITE %in% input$site_code)
-    }) # end site_select reactive
+    })
+    
     
 #   Widget 3: "Comparison of Site Temp Profiles" - Output
     output$temp_plot <- renderPlot({
-      ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp))+
-        geom_line(aes(color = SITE))+
-        gghighlight(unhighlighted_params = list(alpha = 0.5),
-                    use_direct_label = FALSE)+
-        facet_wrap(~SITE)+
-        scale_x_date(limits = c(input$date_select))+
+      ggplot(data = site_select(), aes(x = DATE_LOCAL, y = avg_temp, color = SITE)) +
+        geom_line() +
         labs(x = "Date",
              y = "Average Daily Temperature (°C)",
              color = "Site",
-             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)")+
-        ggtitle("Average Daily Temperature for Selected Site(s) and Dates")+
+             subtitle = "Data: SBC LTER Reef: Bottom Temperature (2002 - 2021)") +
+        ggtitle("Comparison of Site Temperature Profiles") +
         theme(plot.title = element_text(color = "#5b4f41", hjust = 0.5, size = 18),
               plot.subtitle = element_text(color = "#5b4f41", hjust = 0.5, size = 12),
               plot.background = element_rect("white"),
@@ -466,8 +484,9 @@ server <- function(input, output) {
               legend.text = element_text(size = 12),
               legend.title = element_text(size = 14),
               legend.background = element_blank(),
-              legend.box.background = element_rect(colour = "black")) 
+              legend.box.background = element_rect(colour = "black"))
     })
+    
     
 #   Widget 4: "Heatmap" - Reactive Input
     site_heatmap_select <- reactive({
