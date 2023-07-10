@@ -120,22 +120,89 @@ ui <- fluidPage(
                           )
                         )
                ),
+               # Widget 2: "The Fisheries"
+               # Widget 2: "The Fisheries"
                tabPanel("The Fisheries",
-                        h3("Check out the most popular local invertebrate seafood in the Santa Barbara Channel!"),
-                        sidebarLayout(
-                          sidebarPanel(
-                            actionLink("species1", "California Spiny Lobster"),
-                            br(),
-                            actionLink("species2", "Red Sea Urchin"),
-                            br(),
-                            actionLink("species3", "Mediterranean Mussel")
-                          ),
-                          mainPanel(
-                            imageOutput("display"),
-                            textOutput("information"),
-                            uiOutput("link")
-                          )
-                        )
+                        tags$style(HTML("
+    .fisheries-container {
+      background-color: #cdebfa;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 20px;
+    }
+    .fisheries-title {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+    .fisheries-item {
+      padding: 10px;
+      background-color: #ffffff;
+      border-radius: 5px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+    .fisheries-item:hover {
+      background-color: #f5f5f5;
+    }
+    .fisheries-item img {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      margin-right: 10px;
+    }
+    .fisheries-item-text {
+      flex-grow: 1;
+    }
+    .fisheries-item-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    .fisheries-item-fact {
+      margin-bottom: 5px;
+    }
+    .fisheries-item-link {
+      text-decoration: none;
+      color: #0aaafa;
+      font-weight: bold;
+    }
+    .fisheries-item-link:hover {
+      text-decoration: underline;
+    }
+  ")),
+  div(class = "fisheries-container",
+      div(class = "fisheries-title", "Learn interesting scientific facts about popular local invertebrate seafood in the Santa Barbara Channel!"),
+      div(class = "fisheries-item",
+          img(src = "spiny_lobster.jpg"),
+          div(class = "fisheries-item-text",
+              div(class = "fisheries-item-title", "California Spiny Lobster (Panulirus interruptus)"),
+              div(class = "fisheries-item-fact", "California Spiny Lobsters are highly social creatures and communicate through a complex repertoire of clicks and rasps."),
+              a(class = "fisheries-item-link", href = "https://caseagrant.ucsd.edu/seafood-profiles/california-spiny-lobster", target = "_blank", "Learn More")
+          )
+      ),
+      div(class = "fisheries-item",
+          img(src = "red_urchin.jpg"),
+          div(class = "fisheries-item-text",
+              div(class = "fisheries-item-title", "Red Sea Urchin (Mesocentrotus franciscanus)"),
+              div(class = "fisheries-item-fact", "Red Sea Urchins play a vital role in kelp forest ecosystems as important grazers, helping to maintain the balance of algae and promoting biodiversity."),
+              a(class = "fisheries-item-link", href = "https://caseagrant.ucsd.edu/seafood-profiles/red-sea-urchin", target = "_blank", "Learn More")
+          )
+      ),
+      div(class = "fisheries-item",
+          img(src = "mussel.jpg"),
+          div(class = "fisheries-item-text",
+              div(class = "fisheries-item-title", "Mediterranean Mussel (Mytilus galloprovincialis)"),
+              div(class = "fisheries-item-fact", "Mediterranean Mussels are ecosystem engineers, providing important habitats for other marine organisms by forming dense mussel beds that support biodiversity."),
+              a(class = "fisheries-item-link", href = "https://caseagrant.ucsd.edu/seafood-profiles/mediterranean-mussel", target = "_blank", "Learn More")
+          )
+      )
+  )
+  
                ),
                tabPanel("The Data",
                         fluidRow(
@@ -171,7 +238,11 @@ ui <- fluidPage(
                         sidebarLayout(
                           sidebarPanel(
                             h2("Who are we?"),
-                            p("We are graduate students at the University of California, Santa Barbara in Advanced Data Analysis (ESM 244)."),
+                            p("Erin is a current PhD candidate and NSF Fellow in UCSB's Ecology, Evolution, and Marine Biology Department.",
+                                br(), br(),
+                                "Germán is a current PhD candidate and NSF Fellow in UCSB's Geography Department.",
+                              br(),br(),
+                              "Sam is a recent graduate from the Master's of Environmental Science Management program at UCSB's Bren School (2023)."),
                             br(),
                             img(
                               src = "UC_Santa_Barbara_Wordmark_Navy_RGB.png",
