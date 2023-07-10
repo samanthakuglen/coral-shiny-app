@@ -8,10 +8,8 @@ library(ggbeeswarm)
 library(plotly)
 
 ### Setup for Widget 2
-# Read in data for site map markers 
 site_markers <- read_csv("site_locations_all.csv")
 
-# Set bounding box coordinates for map 
 sbLat <- 34.317664
 sbLong <- -119.757643
 sbZoom <- 9.48
@@ -25,55 +23,82 @@ blue_icon <- makeIcon(
   iconUrl = "https://img.icons8.com/ultraviolet/344/marker.png",
   iconWidth = 40, iconHeight = 40)
 
-#Define UI
+# Define UI
 ui <- fluidPage(
   theme = bs_theme(version = 4, bootswatch = "flatly"),
   tags$head(
-    tags$style(
-      HTML("
-        .welcome-section {
-          background-color: #e1ecf4;
-          padding: 20px;
-          border-radius: 5px;
-        }
-      ")
-    )
+    tags$style(HTML("
+      .navbar {
+        background-color: #0aaafa;
+      }
+      
+      .header-image {
+        position: relative;
+        height: 200px;
+        text-align: center;
+      }
+      .header-image .title {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background-color: rgba(255, 255, 255, 0.6);
+        padding: 20px;
+        border-radius: 10px;
+        font-family: Verdana, sans-serif;
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+      }
+      .tab-panel-header {
+        background-color: #cdebfa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        font-family: Verdana, sans-serif;
+      }
+    "))
   ),
   navbarPage(
     "Historical Ocean Temperature Data at Reef Sites in the Santa Barbara Channel",
-    # Widget 1: Site About Info
     navbarMenu("About",
                tabPanel("The App",
-                        fluidRow(
-                          column(
-                            width = 12,
-                            div(
-                              class = "welcome-section",
-                              h2("Welcome!"),
-                              p("This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).")
+                        tags$div(
+                          class = "header-image",
+                          img(src = "header_image.jpg", style = "width: 100%;"),
+                          div(class = "title", "Historical Ocean Temperature Data at Reef Sites in the Santa Barbara Channel"),
+                          style = "margin-bottom: 20px;"
+                        ),
+                        tags$div(
+                          class = "tab-panel-header",
+                          tags$h2("Welcome!",
+                                  style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"),
+                          tags$p(
+                            "This app allows users to visualize benthic ocean temperature data collected at reef sites in the Santa Barbara Channel (SBC) by Santa Barbara Long Term Ecological Research (SBC LTER).",
+                            style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"
+                          ),
+                          fluidRow(
+                            column(
+                              width = 6,
+                              style = "display:flex; align-items:center; justify-content:left;",
+                              img(src = "sbc.jpeg", style = "height: 350px; margin: 20 auto;")
+                            ),
+                            column(
+                              width = 6,
+                              style = "display:flex; align-items:center; justify-content:right;",
+                              img(src = "rocky_reef.jpg", style = "height: 350px; margin: 0 auto;")
                             )
-                          )
-                        ),
-                        fluidRow(
-                          column(
-                            width = 12,
-                            h4(HTML('Want to learn more about how these data were collected? Check out the <a href="https://sbclter.msi.ucsb.edu/data/catalog/package/?package=knb-lter-sbc.13" target="_blank">data repository</a>.'))
-                          )
-                        ),
-                        fluidRow(
-                          column(
-                            width = 12,
-                            img(src = "sbc.jpeg", style = "display:block; margin:auto;", height = 400)
-                          )
-                        ),
-                        fluidRow(
-                          column(
-                            width = 12,
-                            h5(HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/esm-244-shiny-app" target="_blank">Github</a>.'))
+                          ),
+                          tags$h4(
+                            HTML('Want to learn more about how these data were collected? Check out the <a href="https://sbclter.msi.ucsb.edu/data/catalog/package/?package=knb-lter-sbc.13" target="_blank">data repository</a>.'),
+                            style = "font-family: Verdana, sans-serif; text-align: center; margin-bottom: 20px;"
+                          ),
+                          tags$h5(
+                            HTML('Code and data used to create this Shiny app are available on <a href="https://github.com/samanthakuglen/esm-244-shiny-app" target="_blank">Github</a>.'),
+                            style = "font-family: Verdana, sans-serif; text-align: center;"
                           )
                         )
                ),
-
                tabPanel("The Fisheries",
                         h3("Check out the most popular local invertebrate seafood in the Santa Barbara Channel!"),
                         sidebarLayout(
